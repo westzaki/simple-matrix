@@ -4,9 +4,11 @@
         this.row = array[0].length;
 
         this.val = [];
-        for (var i = 0; i < this.col; i++) {
+
+        var i, j;
+        for (i = 0; i < this.col; i++) {
             this.val[i] = [];
-            for (var j = 0; j < this.row; j++) {
+            for (j = 0; j < this.row; j++) {
                 this.val[i][j] = array[i][j];
             }
         }
@@ -28,10 +30,11 @@
         
 
         add: function(matrix) {
-            var newVal = [];
-            for (var i = 0; i < this.col; i++) {
+            var newVal = [],
+                i, j;
+            for (i = 0; i < this.col; i++) {
                 newVal[i] = [];
-                for (var j = 0; j < this.row; j++) {
+                for (j = 0; j < this.row; j++) {
                     newVal[i][j] = matrix.val[i][j] + this.val[i][j];
                 }
             }
@@ -44,10 +47,11 @@
         },
 
         scalar: function(n) {
-            var newVal = [];
-            for (var i = 0; i < this.col; i++) {
+            var newVal = [],
+                i, j;
+            for (i = 0; i < this.col; i++) {
                 newVal[i] = [];
-                for (var j = 0; j < this.row; j++) {
+                for (j = 0; j < this.row; j++) {
                     newVal[i][j] = n * this.val[i][j];
                 }
             }
@@ -56,12 +60,13 @@
         },
 
         mul: function(matrix) {
-            var newVal = [];
-            for (var i = 0; i < this.col; i++) {
+            var newVal = [],
+                i, j, k;
+            for (i = 0; i < this.col; i++) {
                 newVal[i] = [];
-                for (var j = 0; j < matrix.row; j++) {
+                for (j = 0; j < matrix.row; j++) {
                     var temp = 0;
-                    for (var k = 0; k < this.row; k++) {
+                    for (k = 0; k < this.row; k++) {
                         temp += this.val[i][k] * matrix.val[k][j];
                     }
                     newVal[i][j] = temp;
@@ -76,13 +81,15 @@
         },
 
         compare: function(matrix) {
-            if (this.col !== matrix.col
-                || this.row !== matrix.row) {
+            var i, j;
+
+            if (this.col !== matrix.col ||
+                this.row !== matrix.row) {
                 return false;
             }
 
-            for (var i = 0; i < this.col; i++) {
-                for (var j = 0; j < this.row; j++) {
+            for (i = 0; i < this.col; i++) {
+                for (j = 0; j < this.row; j++) {
                     if (this.val[i][j] !== matrix.val[i][j]) {
                         return false;
                     }
@@ -95,13 +102,14 @@
         det: function() {
             var det = 1,
                 clone = this.clone(),
-                n = clone.col;
+                n = clone.col,
+                i, j, k;
 
-            for (var i = 0; i < n; i++) {
-                for (var j = 0; j < n; j++) {
+            for (i = 0; i < n; i++) {
+                for (j = 0; j < n; j++) {
                     if (i < j) {
                         var temp = clone.val[j][i] / clone.val[i][i];
-                        for(var k = 0; k < n; k++){
+                        for(k = 0; k < n; k++){
                             clone.val[j][k] -= clone.val[i][k] * temp;
                         }
                     }
@@ -114,13 +122,14 @@
 
         inv: function() {
             var clone = this.clone(),
-                n = clone.col;
+                n = clone.col,
+                i, j, k;
 
             // make identity matrix value
             var newVal = [];
-            for (var i = 0; i < n; i++) {
+            for (i = 0; i < n; i++) {
                 newVal[i] = [];
-                for (var j = 0; j < n; j++) {
+                for (j = 0; j < n; j++) {
                     if (i === j) {
                         newVal[i][j] = 1;
                     } else {
@@ -130,16 +139,16 @@
             }
 
             // Gauss-Jordan method
-            for (var i = 0; i < n; i++) {
+            for (i = 0; i < n; i++) {
                 var temp = 1 / clone.val[i][i];
-                for (var j = 0; j < n; j++) {
+                for (j = 0; j < n; j++) {
                     clone.val[i][j] *= temp;
                     newVal[i][j] *= temp;
                 }
-                for (var j = 0; j < n; j++) {
+                for (j = 0; j < n; j++) {
                     if (i !==j) {
                         temp = clone.val[j][i];
-                        for (var k = 0; k < n; k++) {
+                        for (k = 0; k < n; k++) {
                             clone.val[j][k] -= clone.val[i][k] * temp;
                             newVal[j][k] -= newVal[i][k] * temp;
                         }
@@ -151,10 +160,11 @@
         },
 
         trans: function() {
-            var newVal = [];
-            for (var i = 0; i < this.col; i++) {
+            var newVal = [],
+                i, j;
+            for (i = 0; i < this.col; i++) {
                 newVal[i] = [];
-                for (var j = 0; j < this.row; j++) {
+                for (j = 0; j < this.row; j++) {
                     newVal[i][j] = this.val[j][i];
                 }
             }

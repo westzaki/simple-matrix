@@ -84,7 +84,7 @@ test('compare', function() {
     equal(true, m1.compare(m1));
 
     var m2 = new Matrix([[1, 2], [3, 5]]);
-    equal(false, m1.compare(m2))
+    equal(false, m1.compare(m2));
 
     var m3 = new Matrix([[1, 2], [3, 4], [5, 6]]);
     equal(false, m1.compare(m3));
