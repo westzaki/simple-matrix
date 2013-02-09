@@ -17,7 +17,7 @@ module.exports = function(grunt) {
         uglify: {
             my_target: {
                 files: {
-                    'dist/simple-matrix.min.js': ['src/simple-matrix.js']
+                    'simple-matrix.min.js': ['simple-matrix.js']
                 }
             }
         }
