@@ -1,12 +1,21 @@
 (function(window) {
     var Matrix = function(array) {
+        if (!(array instanceof Array) ||
+            array.length === 0 ||
+            !(array[0] instanceof Array) ||
+            array[0].length === 0) {
+            throw new Error('invalid argument');
+        }
+
         this.col = array.length;
         this.row = array[0].length;
-
         this.val = [];
 
         var i, j;
         for (i = 0; i < this.col; i++) {
+            if (this.row !== array[i].length) {
+                throw new Error('invalid argument');
+            }
             this.val[i] = [];
             for (j = 0; j < this.row; j++) {
                 this.val[i][j] = array[i][j];
@@ -25,11 +34,27 @@
         },
 
         getVal: function(col, row) {
+            if (typeof col === 'undefined' ||
+                typeof row === 'undefined' ||
+                col < 0 ||
+                row < 0 ||
+                col > this.col ||
+                row > this.row) {
+                throw new Error('invalid argument');
+            }
             return this.val[col][row];
         },
         
 
         add: function(matrix) {
+            if (!(matrix instanceof Matrix)) {
+                throw new Error('invalid argument');
+            }
+            if (matrix.col !== this.col ||
+                matrix.row !== this.row) {
+                throw new Error('input matrix size is wrong');
+            }
+
             var newVal = [],
                 i, j;
             for (i = 0; i < this.col; i++) {
@@ -47,6 +72,10 @@
         },
 
         scalar: function(n) {
+            if (typeof n !== 'number') {
+                throw new Error('invalid argument');
+            }
+
             var newVal = [],
                 i, j;
             for (i = 0; i < this.col; i++) {
@@ -60,6 +89,13 @@
         },
 
         mul: function(matrix) {
+            if (!(matrix instanceof Matrix)) {
+                throw new Error('invalid argument');
+            }
+            if (matrix.col !== this.row) {
+                throw new Error('input matrix size is wrong');
+            }
+
             var newVal = [],
                 i, j, k;
             for (i = 0; i < this.col; i++) {
@@ -81,6 +117,9 @@
         },
 
         compare: function(matrix) {
+            if (!(matrix instanceof Matrix)) {
+                return false;
+            }
             var i, j;
 
             if (this.col !== matrix.col ||
@@ -100,6 +139,11 @@
         },
 
         det: function() {
+            if (this.col !== this.row) {
+                // determinant exists only square matrix
+                return undefined;
+            }
+
             var det = 1,
                 clone = this.clone(),
                 n = clone.col,
@@ -121,6 +165,12 @@
         },
 
         inv: function() {
+            var det = this.det();
+            if (det === undefined ||
+                det === 0) {
+                return undefined;
+            }
+
             var clone = this.clone(),
                 n = clone.col,
                 i, j, k;

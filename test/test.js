@@ -10,6 +10,24 @@ test('constructor', function() {
     equal(6, m1.val[1][2]);
 });
 
+test('constructor argument check', function() {
+    throws(function() {
+        new Matrix(3);
+    }, Error);
+    throws(function() {
+        new Matrix('string');
+    }, Error);
+    throws(function() {
+        new Matrix([1]);
+    }, Error);
+    throws(function() {
+        new Matrix([[1, 2], [1, 2, 3]]);
+    }, Error);
+    throws(function() {
+        new Matrix([[]]);
+    }, Error);
+});
+
 test('getColSize', function() {
     var m1 = new Matrix([[1, 2], [3, 4]]);
     equal(2, m1.getColSize());
@@ -40,7 +58,26 @@ test('getVal', function() {
     equal(4, m1.getVal(1, 1));
 });
 
-test('add success', function() {
+test('getVal argument check', function() {
+    var m1 = new Matrix([[1, 2], [3, 4]]);
+    throws(function() {
+        m1.getVal(1);
+    }, Error);
+    throws(function() {
+        m1.getVal(-1, 3);
+    }, Error);
+    throws(function() {
+        m1.getVal(2, -1);
+    }, Error);
+    throws(function() {
+        m1.getVal(3, 1);
+    }, Error);
+    throws(function() {
+        m1.getVal(1, 3);
+    }, Error);
+});
+
+test('add', function() {
     var m1 = new Matrix([[1, 2], [3, 4]]);
     var m2 = new Matrix([[3, 4], [-1, 4]]);
     var m3 = m1.add(m2);
@@ -50,7 +87,17 @@ test('add success', function() {
     equal(8, m3.getVal(1, 1));
 });
 
-test('sub success', function() {
+test('add argument check', function() {
+    var m1 = new Matrix([[1, 2], [3, 4]]);
+    throws(function() {
+        m1.add(1);
+    }, Error);
+    throws(function() {
+        m1.add(new Matrix([1, 2, 3], [4, 5, 6]));
+    }, Error);
+});
+
+test('sub', function() {
     var m1 = new Matrix([[1, 2], [3, 4]]);
     var m2 = new Matrix([[3, 4], [-1, 4]]);
     var m3 = m1.sub(m2);
@@ -58,6 +105,16 @@ test('sub success', function() {
     equal(-2, m3.getVal(0, 1));
     equal(4, m3.getVal(1, 0));
     equal(0, m3.getVal(1, 1));
+});
+
+test('sub argument check', function() {
+    var m1 = new Matrix([[1, 2], [3, 4]]);
+    throws(function() {
+        m1.sub(1);
+    }, Error);
+    throws(function() {
+        m1.sub(new Matrix([1, 2, 3], [4, 5, 6]));
+    }, Error);
 });
 
 test('scalar', function() {
@@ -69,7 +126,14 @@ test('scalar', function() {
     equal(12, m2.getVal(1, 1));
 });
 
-test('mul success', function() {
+test('scalar argument check', function() {
+    var m1 = new Matrix([[1, 2], [3, 4]]);
+    throws(function() {
+        m1.sub('string');
+    }, Error);
+});
+
+test('mul', function() {
     var m1 = new Matrix([[1, 2], [3, 4]]);
     var m2 = new Matrix([[3, 4], [-1, 4]]);
     var m3 = m1.mul(m2);
@@ -77,6 +141,38 @@ test('mul success', function() {
     equal(12, m3.getVal(0, 1));
     equal(5, m3.getVal(1, 0));
     equal(28, m3.getVal(1, 1));
+
+    var m4 = new Matrix([[1, 1, 1], [1, 1, 1]]);
+    var m5 = new Matrix([[1, 1], [1, 1], [1, 1]]);
+    var m6 = m4.mul(m5);
+    equal(3, m6.getVal(0, 0));
+    equal(3, m6.getVal(0, 1));
+    equal(3, m6.getVal(1, 0));
+    equal(3, m6.getVal(1, 1));
+});
+
+test('mul argument check', function() {
+    var m1 = new Matrix([[1, 2], [3, 4]]);
+    throws(function() {
+        m1.mul('string');
+    }, Error);
+    throws(function() {
+        m1.mul(1);
+    }, Error);
+
+    var m2 = new Matrix([[1, 2], [3, 4], [5, 6]]);
+    throws(function() {
+        m1.mul(m2);
+    }, Error);
+});
+
+test('clone', function() {
+    var m1 = new Matrix([[1, 2], [3, 4]]);
+    var m2 = m1.clone();
+    equal(1, m1.getVal(0, 0));
+    equal(2, m1.getVal(0, 1));
+    equal(3, m1.getVal(1, 0));
+    equal(4, m1.getVal(1, 1));
 });
 
 test('compare', function() {
@@ -88,15 +184,19 @@ test('compare', function() {
 
     var m3 = new Matrix([[1, 2], [3, 4], [5, 6]]);
     equal(false, m1.compare(m3));
+    equal(false, m1.compare(3));
 });
 
-test('det success', function() {
+test('det', function() {
     var m1 = new Matrix([[1, 2], [3, 4]]);
     equal(-2, m1.det());
 
     var m2 = new Matrix([[1, 8, 9], [-3, 2, 1], [4, 1, 5]]);
     // cancellation of significant digits occurs.
     equal(true, m2.det() - 62 < 0.001);
+
+    var m3 = new Matrix([[1, 8, 9], [-3, 2, 1]]);
+    equal(undefined, m3.det());
 });
 
 test('inv', function() {
@@ -106,6 +206,11 @@ test('inv', function() {
     equal(-1, m2.getVal(0, 1));
     equal(-5, m2.getVal(1, 0));
     equal(2, m2.getVal(1, 1));
+
+    var m3 = new Matrix([[1, 1], [1, 1]]);
+    equal(undefined, m3.inv());
+    var m4 = new Matrix([[1, 8, 9], [-3, 2, 1]]);
+    equal(undefined, m4.inv());
 });
 
 test('trans', function() {
