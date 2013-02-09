@@ -1,4 +1,13 @@
+/**
+ * Simple Matrix v0.1.0 
+ *
+ * Copyright (c) 2013 westzaki
+ * Released under MIT license
+ */
 (function(window) {
+    /**
+     * constructor
+     */
     var Matrix = function(array) {
         if (!(array instanceof Array) ||
             array.length === 0 ||
@@ -25,14 +34,23 @@
     
     Matrix.prototype = {
         
+        /**
+         * Get the number of rows
+         */
         getRowSize: function() {
             return this.row;
         },
 
+        /**
+         * Get the number of columns
+         */
         getColSize: function() {
             return this.col;
         },
 
+        /**
+         * Get element of this matrix
+         */
         getVal: function(col, row) {
             if (typeof col === 'undefined' ||
                 typeof row === 'undefined' ||
@@ -46,6 +64,9 @@
         },
         
 
+        /**
+         * Add a matrix to this matrix
+         */
         add: function(matrix) {
             if (!(matrix instanceof Matrix)) {
                 throw new Error('invalid argument');
@@ -67,10 +88,16 @@
             return new Matrix(newVal);
         },
 
+        /**
+         * Subtruct a matrix from this matrix
+         */
         sub: function(matrix) {
             return this.add(matrix.scalar(-1));
         },
 
+        /**
+         * Scalar multiple
+         */
         scalar: function(n) {
             if (typeof n !== 'number') {
                 throw new Error('invalid argument');
@@ -88,6 +115,9 @@
             return new Matrix(newVal);
         },
 
+        /**
+         * Multiple 2 matrix
+         */
         mul: function(matrix) {
             if (!(matrix instanceof Matrix)) {
                 throw new Error('invalid argument');
@@ -112,10 +142,16 @@
             return new Matrix(newVal);
         },
 
+        /**
+         * Return a copy of this matrix
+         */
         clone: function() {
             return this.scalar(1);
         },
 
+        /**
+         * Compare the values of the 2 matrix
+         */
         compare: function(matrix) {
             if (!(matrix instanceof Matrix)) {
                 return false;
@@ -138,6 +174,9 @@
             return true;
         },
 
+        /**
+         * Return the determinant of this matrix
+         */
         det: function() {
             if (this.col !== this.row) {
                 // determinant exists only square matrix
@@ -164,6 +203,9 @@
             return det;
         },
 
+        /**
+         * Return a new matrix that is the inverse of this matrix
+         */
         inv: function() {
             var det = this.det();
             if (det === undefined ||
@@ -209,6 +251,9 @@
             return new Matrix(newVal);
         },
 
+        /**
+         * Return a new matrix that is the transpose of this matrix
+         */
         trans: function() {
             var newVal = [],
                 i, j;
