@@ -1,4 +1,4 @@
-/**
+/*!
  * Simple Matrix v0.1.0 
  *
  * Copyright (c) 2013 westzaki

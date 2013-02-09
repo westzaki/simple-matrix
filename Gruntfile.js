@@ -15,6 +15,9 @@ module.exports = function(grunt) {
         },
 
         uglify: {
+            options: {
+                preserveComments: 'some'
+            },
             my_target: {
                 files: {
                     'simple-matrix.min.js': ['simple-matrix.js']
