@@ -19,4 +19,4 @@ var matrix = new Matrix([[1, 2], [3, 4]]);
 
 ## Release History
 
- * 2013-01-22   v0.1.0   First release.
+ * 2013-02-10   v0.1.0   First release.
